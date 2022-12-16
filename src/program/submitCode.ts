@@ -2,7 +2,9 @@ import { GearApi, GearKeyring } from '@gear-js/api';
 import { readFileSync } from 'fs';
 import { PATH_TO_OPT } from '../config';
 
-const main = async () => {
+let id = '';
+
+const uploadCode = async () => {
     const api = await GearApi.create({
         // providerAddress: 'ws://127.0.0.1:9944',
         providerAddress: 'wss://rpc-node.gear-tech.io',
@@ -26,7 +28,10 @@ const main = async () => {
                     if (event.method === 'ExtrinsicFailed') {
                         reject(api.getExtrinsicFailedError(event).docs.join('/n'));
                     } else if (event.method === 'CodeChanged' && status.isInBlock) {
-                        console.log(JSON.stringify(event.toHuman(), undefined, 2));
+                        let json = JSON.stringify(event.toHuman(), undefined, 2)
+                        console.log(json);
+                        let result = JSON.parse(json);
+                        id = result.data.id;
                     }
                 });
             });
@@ -36,8 +41,11 @@ const main = async () => {
     }
 };
 
-main()
-    .then(() => process.exit(0))
+uploadCode()
+    .then(() => {
+        console.log(`ProgramID: ${id}\n`);
+        process.exit(0)
+    })
     .catch((error) => {
         console.log(error);
         process.exit(1);
