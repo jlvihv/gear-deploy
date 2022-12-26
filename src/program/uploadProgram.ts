@@ -1,8 +1,11 @@
 import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { decodeAddress } from '@gear-js/api';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
 import { waitForInit } from './waitForInit';
+
+let id = '';
+let metaString = '';
 
 const main = async () => {
     const api = await GearApi.create({
@@ -18,7 +21,10 @@ const main = async () => {
     const metaFile = readFileSync(PATH_TO_META);
 
     const meta = await getWasmMetadata(metaFile);
-    console.log(`Meta: ${JSON.stringify(meta, undefined, 2)}`);
+    let metaInfo = JSON.stringify(meta, undefined, 2);
+    console.log(`Meta: ${metaInfo}`);
+    metaString = meta.types.toString();
+    console.log(`MetaString: ${metaString}`);
 
     const initPayload = {
         name_of_event: 'GEAR JS EXAMPLE',
@@ -29,6 +35,7 @@ const main = async () => {
     const { programId } = api.program.upload({ code, initPayload, gasLimit: gas.min_limit }, meta);
 
     console.log(`ProgramID: ${programId}\n`);
+    id = programId;
 
     waitForInit(api, programId)
         .then(() => console.log('Program initialization was successful'))
@@ -54,7 +61,11 @@ const main = async () => {
 };
 
 main()
-    .then(() => process.exit(0))
+    .then(() => {
+        writeFileSync('programID.txt', `REACT_APP_PROGRAM_ID=${id}`);
+        writeFileSync('metaString.txt', `REACT_APP_META_TYPES=${metaString}`);
+        process.exit(0)
+    })
     .catch((error) => {
         console.log(error);
         process.exit(1);
