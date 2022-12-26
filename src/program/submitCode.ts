@@ -11,7 +11,7 @@ const uploadCode = async () => {
     });
 
     // const user = await GearKeyring.fromSuri('//Alice');
-    const user = await GearKeyring.fromSuri('//Bob');
+    const user = await GearKeyring.fromMnemonic('response echo pact lock fit forum oblige recall capable draw then insane');
     console.log(`User logined address: ${user.address}`);
 
     const code = readFileSync(PATH_TO_OPT);
