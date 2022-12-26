@@ -1,5 +1,5 @@
 import { GearApi, GearKeyring } from '@gear-js/api';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { PATH_TO_OPT } from '../config';
 
 let id = '';
@@ -44,6 +44,7 @@ const uploadCode = async () => {
 uploadCode()
     .then(() => {
         console.log(`ProgramID: ${id}\n`);
+        writeFileSync('programID.txt', `REACT_APP_PROGRAM_ID=${id}`);
         process.exit(0)
     })
     .catch((error) => {
