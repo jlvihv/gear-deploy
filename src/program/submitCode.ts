@@ -11,7 +11,9 @@ const uploadCode = async () => {
         providerAddress: 'wss://rpc-node.gear-tech.io',
     });
 
-    const user = await GearKeyring.fromSuri('//Alice');
+    // const user = await GearKeyring.fromSuri('//Alice');
+    const mnemonic = process.env.MNEMONIC;
+    const user = await GearKeyring.fromMnemonic(mnemonic);
     console.log(`User logined address: ${user.address}`);
 
     const code = readFileSync(PATH_TO_OPT);
