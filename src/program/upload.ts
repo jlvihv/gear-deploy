@@ -52,10 +52,11 @@ async function postMetadata(
 
 async function uploadCode() {
     const api = await GearApi.create({
-        providerAddress: 'wss://rpc-node.gear-tech.io',
+        // providerAddress: 'wss://rpc-node.gear-tech.io',
+        providerAddress: 'wss://node-workshop.gear.rs',
     });
 
-    const user = await GearKeyring.fromSuri('//Alice');
+    const user = await GearKeyring.fromSuri('//Bob');
     // const mnemonic = process.env.MNEMONIC;
     // const user = await GearKeyring.fromMnemonic(mnemonic);
     console.log(`User logined address: ${user.address}`);
