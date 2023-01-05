@@ -62,7 +62,7 @@ async function uploadCode() {
 
     // providerAddress: 'wss://node-workshop.gear.rs',
     let providerAddress = process.env.PROVIDER_ADDRESS;
-    if (!providerAddress) {
+    if (!providerAddress || providerAddress === '') {
         providerAddress = 'wss://rpc-node.gear-tech.io';
     }
 
