@@ -51,15 +51,24 @@ async function postMetadata(
 
 
 async function uploadCode() {
-    const api = await GearApi.create({
-        // providerAddress: 'wss://rpc-node.gear-tech.io',
-        providerAddress: 'wss://node-workshop.gear.rs',
-    });
-
-    // const user = await GearKeyring.fromSuri('//Alice');
     const mnemonic = process.env.MNEMONIC;
-    const user = await GearKeyring.fromMnemonic(mnemonic);
+    let user: KeyringPair;
+    if (!mnemonic) {
+        user = await GearKeyring.fromSuri('//Alice');
+    } else {
+        user = await GearKeyring.fromMnemonic(mnemonic);
+    }
     console.log(`User logined address: ${user.address}`);
+
+    // providerAddress: 'wss://node-workshop.gear.rs',
+    let providerAddress = process.env.PROVIDER_ADDRESS;
+    if (!providerAddress) {
+        providerAddress = 'wss://rpc-node.gear-tech.io';
+    }
+
+    const api = await GearApi.create({
+        providerAddress,
+    });
 
     const code = readFileSync(PATH_TO_OPT);
 
